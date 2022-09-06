@@ -58,6 +58,12 @@ def make_metrics_crossval(y_true_arr, y_pred_arr):
         'mae': np.mean(mae),
         'coeff': np.mean(coeff),
     }
+def make_metrics_accuracy_crossval(y_true_arr, y_pred_arr):
+    acc = []
+    for idx, y_true in enumerate(y_true_arr):
+        y_pred = y_pred_arr[idx]
+        acc.append(metrics.accuracy_score(y_true, y_pred))
+    return np.mean(acc)
 
 def reduce_features_fold(model, X_train, X_test, y):
     sfs = SequentialFeatureSelector(model)
@@ -70,14 +76,14 @@ def reduce_features(model, X, y):
     sfs.get_support()
     return sfs.transform(X)
 
-def reduce_features_worker(model, input, output, best_features=True):
+def reduce_features_worker(model, input, output, best_features=True, is_linear=True):
     features = (1, input.shape[1]) if best_features is True else input.shape[1]
-    # print(features)
+    print(features)
     sfs = SFS(model,
               k_features=features,
               forward=True,
               floating=False,
-              scoring='neg_mean_absolute_error',
+              scoring='neg_mean_absolute_error' if is_linear else 'accuracy',
               cv=5)
     sfs.fit(input, output)
     selector_metrics = sfs.get_metric_dict()
@@ -88,32 +94,78 @@ def reduce_features_worker(model, input, output, best_features=True):
 
 # # # # # # # # # # # CLASSIFIERS # # # # # # # # # # # # #
 def run_classify_regression(input, output):
-    # print(np.array(input))
-    # print(np.array(input).shape)
-    # print(np.array(output))
-    # print(np.array(output).shape)
+    # model = LogisticRegression()
+    # return reduce_features_worker(model, np.array(input), np.array(output), best_features=False)
+    input = np.array(input)
+    output = np.array(output)
     model = LogisticRegression()
-    return reduce_features_worker(model, np.array(input), np.array(output), best_features=False)
+    kfold = KFold(n_splits=5, shuffle=True, random_state=42)
+    y_pred_arr, y_test_arr, feats_imp = [[] for i in range(3)]
+    for train_index, test_index in kfold.split(input):
+        X_train, X_test = input[train_index], input[test_index]
+        y_train, y_test = output[train_index], output[test_index]
+        reg = model.fit(X_train, y_train)
+        feats_imp.append(model.coef_.tolist())
+        y_test_arr.append(y_test.tolist())
+        y_pred_arr.append(model.predict(X_test).tolist())
+
+    acc_score = make_metrics_accuracy_crossval(y_test_arr, y_pred_arr)
+    feature_importance = np.array(feats_imp).mean(axis=0).tolist()
+    return acc_score, feature_importance
 
 def run_classify_forest(input, output):
+    # model = RandomForestClassifier(max_depth=2, random_state=0)
+    # return reduce_features_worker(model, np.array(input), np.array(output), best_features=False)
+    input = np.array(input)
+    output = np.array(output)
     model = RandomForestClassifier(max_depth=2, random_state=0)
-    return reduce_features_worker(model, np.array(input), np.array(output), best_features=False)
+
+    # input = reduce_features(model, input, output)
+    kfold = KFold(n_splits=5, shuffle=True, random_state=42)
+    y_pred_arr, y_test_arr, feats_imp = [[] for i in range(3)]
+    for train_index, test_index in kfold.split(input):
+        X_train, X_test = input[train_index], input[test_index]
+        y_train, y_test = output[train_index], output[test_index]
+        reg = model.fit(X_train, y_train)
+        feats_imp.append(model.feature_importances_.tolist())
+        y_test_arr.append(y_test.tolist())
+        y_pred_arr.append(model.predict(X_test).tolist())
+    acc_score = make_metrics_accuracy_crossval(y_test_arr, y_pred_arr)
+    feature_importance = np.array(feats_imp).mean(axis=0).tolist()
+    return acc_score, feature_importance
 
 def run_classify_xgboost(input, output):
-    model = xgb.XGBClassifier(objective="reg:squarederror", eval_metric='neg_mean_absolute_error')
-    return reduce_features_worker(model, np.array(input), np.array(output), best_features=False)
+    # model = xgb.XGBClassifier(objective="reg:squarederror")
+    # return reduce_features_worker(model, np.array(input), np.array(output), best_features=False)
+    input = np.array(input)
+    output = np.array(output)
+    model = xgb.XGBClassifier(objective="reg:squarederror")
+
+    # input = reduce_features(model, input, output)
+    kfold = KFold(n_splits=5, shuffle=True, random_state=42)
+    y_pred_arr, y_test_arr, feats_imp = [[] for i in range(3)]
+    for train_index, test_index in kfold.split(input):
+        X_train, X_test = input[train_index], input[test_index]
+        y_train, y_test = output[train_index], output[test_index]
+        model.fit(X_train, y_train)
+        feats_imp.append(model.feature_importances_.tolist())
+        y_test_arr.append(y_test.tolist())
+        y_pred_arr.append(model.predict(X_test).tolist())
+    acc_score = make_metrics_accuracy_crossval(y_test_arr, y_pred_arr)
+    feature_importance = np.array(feats_imp).mean(axis=0).tolist()
+    return acc_score, feature_importance
 
 def run_classify_regression_best_features(input, output):
     model = LogisticRegression()
-    return reduce_features_worker(model, np.array(input), np.array(output))
+    return reduce_features_worker(model, np.array(input), np.array(output), is_linear=False)
 
 def run_classify_forest_best_features(input, output):
     model = RandomForestClassifier(max_depth=2, random_state=0)
-    return reduce_features_worker(model, np.array(input), np.array(output))
+    return reduce_features_worker(model, np.array(input), np.array(output), is_linear=False)
 
 def run_classify_xgboost_best_features(input, output):
-    model = xgb.XGBClassifier(objective="reg:squarederror", eval_metric='neg_mean_absolute_error')
-    return reduce_features_worker(model, np.array(input), np.array(output))
+    model = xgb.XGBClassifier(objective="reg:squarederror")
+    return reduce_features_worker(model, np.array(input), np.array(output), is_linear=False)
 
 # # # # # # # # # # # # REGRESSORS # # # # # # # # # # # # #
 def run_test_regression_feature_selector(input, output):
@@ -133,16 +185,11 @@ def run_test_regression(input, output):
     input = np.array(input)
     output = np.array(output)
     model = LinearRegression()
-
-    # input = reduce_features(model, input, output)
     kfold = KFold(n_splits=5, shuffle=True, random_state=42)
     y_pred_arr, y_test_arr, feats_imp = [[] for i in range(3)]
     for train_index, test_index in kfold.split(input):
         X_train, X_test = input[train_index], input[test_index]
         y_train, y_test = output[train_index], output[test_index]
-
-        # X_train, X_test = reduce_features(model, X_train, X_test, y_train)
-
         reg = model.fit(X_train, y_train)
         feats_imp.append(model.coef_.tolist())
         y_test_arr.append(y_test.tolist())
@@ -162,12 +209,8 @@ def run_test_forest(input, output):
     kfold = KFold(n_splits=5, shuffle=True, random_state=42)
     y_pred_arr, y_test_arr, feats_imp = [[] for i in range(3)]
     for train_index, test_index in kfold.split(input):
-        print('trial')
         X_train, X_test = input[train_index], input[test_index]
         y_train, y_test = output[train_index], output[test_index]
-
-        # X_train, X_test = reduce_features(model, X_train, X_test, y_train)
-
         reg = model.fit(X_train, y_train)
         feats_imp.append(model.feature_importances_.tolist())
         y_test_arr.append(y_test.tolist())
