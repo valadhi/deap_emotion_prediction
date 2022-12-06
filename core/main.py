@@ -17,6 +17,8 @@ from mlxtend.feature_selection import SequentialFeatureSelector as SFS
 from mlxtend.feature_selection import ColumnSelector
 
 exclude_participant = [22]
+def get_exclude_participant():
+    return exclude_participant
 channels = {
 'Fp1': 0, 'AF3': 1, 'F3': 2, 'F7': 3, 'FC5': 4, 'FC1': 5, 'C3': 6, 'T7': 7,
     'CP5': 8, 'CP1': 9, 'P3': 10, 'P7': 11, 'PO3': 12, 'O1': 13, 'Oz': 14,
@@ -118,7 +120,7 @@ def run_classify_forest(input, output):
     # return reduce_features_worker(model, np.array(input), np.array(output), best_features=False)
     input = np.array(input)
     output = np.array(output)
-    model = RandomForestClassifier(max_depth=2, random_state=0)
+    model = RandomForestClassifier()
 
     # input = reduce_features(model, input, output)
     kfold = KFold(n_splits=5, shuffle=True, random_state=42)
