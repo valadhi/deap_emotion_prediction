@@ -29,6 +29,8 @@ from sklearn import svm
 from sklearn.metrics import r2_score, mean_squared_error, make_scorer
 from sklearn import model_selection
 from sklearn import ensemble
+import xgboost
+import hyperopt as hp
 #####################################################################################
         ############################### SVM ##################################
 #####################################################################################
@@ -53,6 +55,17 @@ for emotion in ['Valence', 'Arousal', 'Dominance', 'Liking']:
          # 'n_estimators': [200]
     }
     model = ensemble.RandomForestRegressor()
+
+    parameters = {'max_depth': list(np.arange(3, 18, 1)),
+        'gamma': list(np.arange(1, 9)),
+        'reg_alpha' : list(np.arange(40, 180, 1)),
+        'reg_lambda' : list(np.arange(0, 1)),
+        'colsample_bytree' : list(np.arange(0.5, 1)),
+        'min_child_weight' : list(np.arange(0, 10, 1)),
+        'n_estimators': [180],
+        'seed': [0]
+    }
+    model = xgboost.XGBRegressor()
     grid = model_selection.GridSearchCV(model, parameters, verbose=10,  scoring="neg_mean_squared_error")
     grid.fit(input, output)
 
