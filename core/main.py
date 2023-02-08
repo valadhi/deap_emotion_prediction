@@ -120,7 +120,9 @@ def run_classify_forest(input, output):
     # return reduce_features_worker(model, np.array(input), np.array(output), best_features=False)
     input = np.array(input)
     output = np.array(output)
-    model = RandomForestClassifier()
+
+    # print(input)
+    # print(output)
 
     # input = reduce_features(model, input, output)
     kfold = KFold(n_splits=5, shuffle=True, random_state=42)
@@ -128,11 +130,21 @@ def run_classify_forest(input, output):
     for train_index, test_index in kfold.split(input):
         X_train, X_test = input[train_index], input[test_index]
         y_train, y_test = output[train_index], output[test_index]
+
+        model = RandomForestClassifier(bootstrap=True, max_depth=20, max_features='sqrt', min_samples_leaf=1,
+                                       min_samples_split=5, n_estimators=100, random_state=0)
         reg = model.fit(X_train, y_train)
         feats_imp.append(model.feature_importances_.tolist())
         y_test_arr.append(y_test.tolist())
         y_pred_arr.append(model.predict(X_test).tolist())
+    # print(y_test_arr)
+    # print(y_pred_arr)
     acc_score = make_metrics_accuracy_crossval(y_test_arr, y_pred_arr)
+
+    # print(acc_score)
+    # import sys
+    # sys.exit(0)
+
     feature_importance = np.array(feats_imp).mean(axis=0).tolist()
     return acc_score, feature_importance
 
@@ -162,7 +174,8 @@ def run_classify_regression_best_features(input, output):
     return reduce_features_worker(model, np.array(input), np.array(output), is_linear=False)
 
 def run_classify_forest_best_features(input, output):
-    model = RandomForestClassifier(max_depth=2, random_state=0)
+    # model = RandomForestClassifier(max_depth=2, random_state=0)
+    model = RandomForestClassifier(bootstrap=True, max_depth=20, max_features='sqrt', min_samples_leaf=1, min_samples_split=5, n_estimators=100, random_state=0)
     return reduce_features_worker(model, np.array(input), np.array(output), is_linear=False)
 
 def run_classify_xgboost_best_features(input, output):
@@ -283,5 +296,33 @@ def read_video_info(video_id):
     row = video_info[video_info['Experiment_id'] == video_id].iloc[0]
     return row['Artist'] + " - " + row['Title']
 
+def collate_feature_pickles(scale=True):
+    from sklearn import preprocessing
+    hr_path = "hr_features.pkl"
+    eda_path = "eda_features.pkl"
+    if os.path.isfile(hr_path):
+        hr_features_frame = pd.read_pickle(hr_path)
+    if os.path.isfile(eda_path):
+        eda_features_frame = pd.read_pickle(eda_path)
 
+    eda_features_frame = eda_features_frame.drop(columns=['participant', 'video'])
+    full_feature_data = pd.concat([hr_features_frame, eda_features_frame], axis=1)
 
+    full_feature_data = full_feature_data.fillna(0)
+
+    clean_frame = full_feature_data.sort_values(['participant', 'video'])
+    feats = clean_frame.drop(columns=['participant', 'video'])
+
+    if(scale):
+        scaler = preprocessing.StandardScaler()
+        feats[feats.columns] = scaler.fit_transform(feats[feats.columns])
+        feats = feats.values.tolist()
+
+    return feats
+
+def get_ratings(emotion, linear=True):
+    ratings = pd.read_csv('metadata_csv/participant_ratings.csv')
+    target_emotion = ratings[~ratings.participant.isin([22])].sort_values(['participant', 'video'])[emotion].to_list()
+    if not linear:
+        target_emotion = [0 if (float(e) < 5.0) else 1 for e in target_emotion]
+    return np.array(target_emotion)

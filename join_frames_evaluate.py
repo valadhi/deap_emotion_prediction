@@ -137,27 +137,29 @@ eda_features_frame = eda_features_frame.drop(columns=['participant', 'video'])
 full_feature_data = pd.concat([hr_features_frame, eda_features_frame], axis=1)
 df = full_feature_data
 
+correlation_matrix = df.corr()
+
 # what do about missing/failing feature values
 clean_frame = df.fillna(0)
+print(clean_frame)
 
+# for f in [ALL_FEATURES, BEST_FEATURES]:
+#     for m in [REGRESSION, FOREST, XGBOOST]:
+#         for g in ['participant', 'video']:
+#
+#             path = os.path.join('results', '_'.join([g, f, LINEAR, m]) + '.csv')
+#             if os.path.isfile(path): continue
+#
+#             best_features = True if f == BEST_FEATURES else False
+#             results_frame = run_tests_for_emotions_feat_selector(clean_frame, g, estimator_maps[LINEAR][f][m],
+#                                                                  is_classifier=False, best_features=best_features)
+#
+#             results_frame.to_csv(path)
 
-for f in [ALL_FEATURES, BEST_FEATURES]:
-    for m in [REGRESSION, FOREST, XGBOOST]:
-        for g in ['participant', 'video']:
-
-            path = os.path.join('results', '_'.join([g, f, LINEAR, m]) + '.csv')
-            if os.path.isfile(path): continue
-
-            best_features = True if f == BEST_FEATURES else False
-            results_frame = run_tests_for_emotions_feat_selector(clean_frame, g, estimator_maps[LINEAR][f][m],
-                                                                 is_classifier=False, best_features=best_features)
-
-            results_frame.to_csv(path)
-
-for f in [ALL_FEATURES, BEST_FEATURES]:
-    for m in [REGRESSION, FOREST, XGBOOST]:
-# for f in [ALL_FEATURES]:
-#     for m in [REGRESSION]:
+# for f in [ALL_FEATURES, BEST_FEATURES]:
+#     for m in [REGRESSION, FOREST, XGBOOST]:
+for f in [ALL_FEATURES]:
+    for m in [FOREST]:
         path = os.path.join('results', '_'.join(['alldata', f, CLASSIFIER, m]) + '.csv')
         if os.path.isfile(path): continue
 
