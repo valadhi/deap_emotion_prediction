@@ -56,23 +56,24 @@ for emotion in ['Valence', 'Arousal', 'Dominance', 'Liking']:
     }
     model = ensemble.RandomForestRegressor()
 
-    parameters = {'max_depth': list(np.arange(3, 18, 1)),
-        'gamma': list(np.arange(1, 9)),
-        'reg_alpha' : list(np.arange(40, 180, 1)),
+    parameters = {'max_depth': list(np.arange(3, 18, 4)),
+        'gamma': list(np.arange(1, 9, 2)),
+        'reg_alpha' : list(np.arange(40, 180, 10)),
         'reg_lambda' : list(np.arange(0, 1)),
         'colsample_bytree' : list(np.arange(0.5, 1)),
-        'min_child_weight' : list(np.arange(0, 10, 1)),
+        'min_child_weight' : list(np.arange(0, 10, 2)),
         'n_estimators': [180],
         'seed': [0]
     }
     model = xgboost.XGBRegressor()
-    grid = model_selection.GridSearchCV(model, parameters, verbose=10,  scoring="neg_mean_squared_error")
+    grid = model_selection.GridSearchCV(model, parameters, verbose=5,  scoring="neg_mean_squared_error")
     grid.fit(input, output)
 
     print(emotion)
     best_params = grid.best_params_
     model = grid.best_estimator_
     score = grid.best_score_
+    print(score)
     print(grid.cv_results_)
 
 
