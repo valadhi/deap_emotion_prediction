@@ -1,0 +1,17 @@
+regressor_type,emotion_dimension,feature_group_criteria,group_id,hyperparams_json,score
+random_forest,Valence,none,none,"{""max_depth"": 10, ""max_features"": ""sqrt"", ""min_samples_leaf"": 8, ""min_samples_split"": 2, ""n_estimators"": 200}",-1.8622694333526237
+random_forest,Arousal,none,none,"{""max_depth"": 10, ""max_features"": ""sqrt"", ""min_samples_leaf"": 1, ""min_samples_split"": 10, ""n_estimators"": 200}",-1.736834886828704
+random_forest,Dominance,none,none,"{""max_depth"": 10, ""max_features"": ""sqrt"", ""min_samples_leaf"": 8, ""min_samples_split"": 2, ""n_estimators"": 900}",-1.7878554525696693
+random_forest,Liking,none,none,"{""max_depth"": 10, ""max_features"": ""sqrt"", ""min_samples_leaf"": 8, ""min_samples_split"": 10, ""n_estimators"": 200}",-1.9781906730906496
+xgboost_regressor,Valence,none,none,"{""colsample_bytree"": 0.5, ""gamma"": 7, ""max_depth"": 5, ""min_child_weight"": 6, ""reg_alpha"": 140, ""reg_lambda"": 0}",-1.8042242128156847
+xgboost_regressor,Arousal,none,none,"{""colsample_bytree"": 0.5, ""gamma"": 7, ""max_depth"": 3, ""min_child_weight"": 6, ""reg_alpha"": 140, ""reg_lambda"": 0}",-1.7183522197969499
+xgboost_regressor,Dominance,none,none,"{""colsample_bytree"": 0.5, ""gamma"": 7, ""max_depth"": 3, ""min_child_weight"": 8, ""reg_alpha"": 90, ""reg_lambda"": 0}",-1.827799079079782
+xgboost_regressor,Liking,none,none,"{""colsample_bytree"": 0.5, ""gamma"": 7, ""max_depth"": 5, ""min_child_weight"": 10, ""reg_alpha"": 140, ""reg_lambda"": 0}",-1.9426573906098639
+gradientboost_regressor,Valence,none,none,"{""max_depth"": 5, ""max_features"": 9, ""min_samples_leaf"": 65, ""min_samples_split"": 1100, ""n_estimators"": 10, ""subsample"": 0.6}",-1.7874992846550284
+gradientboost_regressor,Arousal,none,none,"{""max_depth"": 5, ""max_features"": 19, ""min_samples_leaf"": 30, ""min_samples_split"": 1550, ""n_estimators"": 10, ""subsample"": 0.6}",-1.6893702887007571
+gradientboost_regressor,Dominance,none,none,"{""max_depth"": 5, ""max_features"": 19, ""min_samples_leaf"": 65, ""min_samples_split"": 650, ""n_estimators"": 10, ""subsample"": 0.9}",-1.7231946378094878
+gradientboost_regressor,Liking,none,none,"{""max_depth"": 5, ""max_features"": 7, ""min_samples_leaf"": 30, ""min_samples_split"": 650, ""n_estimators"": 10, ""subsample"": 0.7}",-1.8990912434397003
+svr_regressor,Valence,none,none,"{""C"": 1, ""gamma"": 0.0001, ""kernel"": ""poly""}",-1.7800483913946898
+svr_regressor,Arousal,none,none,"{""C"": 1, ""gamma"": 0.0001, ""kernel"": ""poly""}",-1.7076129339506825
+svr_regressor,Dominance,none,none,"{""C"": 1, ""gamma"": 0.0001, ""kernel"": ""rbf""}",-1.7528925394762176
+svr_regressor,Liking,none,none,"{""C"": 1, ""gamma"": 0.0001, ""kernel"": ""poly""}",-1.8182177622910345
