@@ -320,7 +320,7 @@ def collate_feature_pickles(scale=True):
 
     return feats
 
-def get_ratings(emotion, linear=True):
+def get_ratings_second(emotion, linear=True):
     ratings = pd.read_csv('metadata_csv/participant_ratings.csv')
     target_emotion = ratings[~ratings.participant.isin([22])].sort_values(['participant', 'video'])[emotion].to_list()
     if not linear:
