@@ -5,7 +5,7 @@
 # run hyperparam search for linear prediction
 
 # linear prediction for all data
-from core.main import *
+from core.main import get_ratings_second, collate_feature_pickles
 from sklearn import svm
 from sklearn.metrics import r2_score, mean_squared_error, make_scorer
 from sklearn import model_selection
@@ -52,7 +52,7 @@ def two_scorer():
 
 input = collate_feature_pickles(scale=True)
 y_pred_arr, y_test_arr, feats_imp = [[] for i in range(3)]
-kfold = KFold(n_splits=10, shuffle=True, random_state=42)
+kfold = model_selection.KFold(n_splits=10, shuffle=True, random_state=42)
 
 randomForestParams = {
     # 'bootstrap': [True, False],

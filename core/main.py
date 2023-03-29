@@ -80,7 +80,7 @@ def reduce_features(model, X, y):
 
 def reduce_features_worker(model, input, output, best_features=True, is_linear=True):
     features = (1, input.shape[1]) if best_features is True else input.shape[1]
-    print(features)
+    # print(features)
     sfs = SFS(model,
               k_features=features,
               forward=True,
@@ -326,3 +326,14 @@ def get_ratings_second(emotion, linear=True):
     if not linear:
         target_emotion = [0 if (float(e) < 5.0) else 1 for e in target_emotion]
     return np.array(target_emotion)
+
+def get_ratings_group(emotion, target_col, target_val, groupby, exclude, binary=False):
+    target_val = int(target_val) + 1
+    ratings = pd.read_csv('metadata_csv/participant_ratings.csv')
+    target_emotion = ratings[(ratings[target_col] == target_val)].sort_values(
+        by=[groupby])[emotion].to_list()
+    if exclude:
+        target_emotion = [t for i, t in enumerate(target_emotion) if i not in [22]]
+    if binary:
+        target_emotion = [0 if (float(e) < 5.0) else 1 for e in target_emotion]
+    return target_emotion
