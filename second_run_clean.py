@@ -17,6 +17,7 @@ import hyperopt as hp
 import os.path
 import json
 from csv import writer
+import numpy as np
 # run feature selection with a minimal score increment for selecting other combination
 def write_to_csv(filename, to_add):
     csv_header = ['regressor_type', 'emotion_dimension', 'feature_group_criteria', 'group_id', 'hyperparams_json', 'score']
