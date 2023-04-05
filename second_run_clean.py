@@ -18,21 +18,6 @@ import os.path
 import json
 from csv import writer
 # run feature selection with a minimal score increment for selecting other combination
-def MSE(y_true,y_pred):
-    mse = mean_squared_error(y_true, y_pred)
-    print ('MSE: %2.3f' % mse)
-    return mse
-
-def R2(y_true,y_pred):
-     r2 = r2_score(y_true, y_pred)
-     print ('R2: %2.3f' % r2)
-     return r2
-
-def two_score(y_true,y_pred):
-    MSE(y_true,y_pred) #set score here and not below if using MSE in GridCV
-    score = R2(y_true,y_pred)
-    return score
-
 def write_to_csv(filename, to_add):
     csv_header = ['regressor_type', 'emotion_dimension', 'feature_group_criteria', 'group_id', 'hyperparams_json', 'score']
     csv_filename = filename
@@ -46,13 +31,54 @@ def write_to_csv(filename, to_add):
         writer_object.writerow(to_add)
         f_object.close()
 
-def two_scorer():
-    return make_scorer(two_score, greater_is_better=True)
-
-
 input = collate_feature_pickles(scale=True)
 y_pred_arr, y_test_arr, feats_imp = [[] for i in range(3)]
 kfold = model_selection.KFold(n_splits=10, shuffle=True, random_state=42)
+
+csv_filename = 'hyper_search_results.csv'
+csv_filename = 'hyper_search_classifier_results.csv'
+def run_hyper_search(model, params, model_descr, group_name='none', group_id='none'):
+    print("Doing search for " + str(model_descr) + " and group type " + str(group_name))
+    for emotion in ['Valence', 'Arousal', 'Dominance', 'Liking']:
+        # target = get_ratings_second(emotion, linear=True)
+        target = get_ratings_second(emotion, linear=False)
+        output = np.array(target)
+
+        # grid = model_selection.GridSearchCV(model, params, verbose=1, scoring="neg_mean_absolute_error")
+        grid = model_selection.GridSearchCV(model, params, verbose=1, scoring="accuracy")
+        grid.fit(input, output)
+
+        best_params = grid.best_params_
+        model = grid.best_estimator_
+        score = grid.best_score_
+        # 'regressor_type', 'emotion_dimension', 'feature_group_criteria', 'group_id', 'hyperparams_json', 'score'
+        results_row = [model_descr, emotion, group_name, group_id, json.dumps(best_params), str(score)]
+        write_to_csv(csv_filename, results_row)
+########################################################################################################
+############################### sklearn.ensemble.RandomForestRegressor #################################
+########################################################################################################
+# model = ensemble.RandomForestRegressor()
+# run_hyper_search(model=model, params=randomForestParams, model_descr='random_forest')
+# # run_hyper_search(model=model, params={}, model_descr='random_forest')
+# model = xgboost.XGBRegressor()
+# run_hyper_search(model=model, params=xgboostRegressorParameters, model_descr='xgboost_regressor')
+# # run_hyper_search(model=model, params={}, model_descr='xgboost_regressor')
+# model = sklearn.ensemble.GradientBoostingRegressor()
+# run_hyper_search(model=model, params=GradientBoostingParameters, model_descr='gradientboost_regressor')
+# # run_hyper_search(model=model, params={}, model_descr='gradientboost_regressor')
+# model = sklearn.svm.SVR()
+# run_hyper_search(model=model, params=SVRParameters, model_descr='svr_regressor')
+# # run_hyper_search(model=model, params={}, model_descr='svr_regressor')
+
+randomForestClassifierParams = {
+    'n_estimators': [25, 50, 100, 150],
+    'max_features': ['sqrt', 'log2', None],
+    'max_depth': [3, 6, 9],
+    'max_leaf_nodes': [3, 6, 9],
+}
+model = ensemble.RandomForestClassifier()
+run_hyper_search(model=model, params=randomForestClassifierParams, model_descr='random_forest')
+sys.exit(0)
 
 randomForestParams = {
     # 'bootstrap': [True, False],
@@ -188,41 +214,3 @@ for group_name in ['participant', 'video']:
 
 # import sys
 # sys.exit(0)
-
-csv_filename = 'hyper_search_results.csv'
-def run_hyper_search(model, params, model_descr, group_name='none', group_id='none'):
-    print("Doing search for " + str(model_descr) + " and group type " + str(group_name))
-    for emotion in ['Valence', 'Arousal', 'Dominance', 'Liking']:
-        target = get_ratings_second(emotion, linear=True)
-        output = np.array(target)
-
-        grid = model_selection.GridSearchCV(model, params, verbose=1, scoring="neg_mean_absolute_error")
-        grid.fit(input, output)
-
-        best_params = grid.best_params_
-        model = grid.best_estimator_
-        score = grid.best_score_
-        # 'regressor_type', 'emotion_dimension', 'feature_group_criteria', 'group_id', 'hyperparams_json', 'score'
-        results_row = [model_descr, emotion, group_name, group_id, json.dumps(best_params), str(score)]
-        write_to_csv(csv_filename, results_row)
-########################################################################################################
-############################### sklearn.ensemble.RandomForestRegressor #################################
-########################################################################################################
-model = ensemble.RandomForestRegressor()
-run_hyper_search(model=model, params=randomForestParams, model_descr='random_forest')
-# run_hyper_search(model=model, params={}, model_descr='random_forest')
-model = xgboost.XGBRegressor()
-run_hyper_search(model=model, params=xgboostRegressorParameters, model_descr='xgboost_regressor')
-# run_hyper_search(model=model, params={}, model_descr='xgboost_regressor')
-model = sklearn.ensemble.GradientBoostingRegressor()
-run_hyper_search(model=model, params=GradientBoostingParameters, model_descr='gradientboost_regressor')
-# run_hyper_search(model=model, params={}, model_descr='gradientboost_regressor')
-model = sklearn.svm.SVR()
-run_hyper_search(model=model, params=SVRParameters, model_descr='svr_regressor')
-# run_hyper_search(model=model, params={}, model_descr='svr_regressor')
-
-# sklearn.ensemble.GradientBoostingRegressor
-# sklearn.gaussian_process.GaussianProcessRegressor
-# sklearn.linear_model.BayesianRidge
-# sklearn.neighbors.KNeighborsRegressor
-# sklearn.svm.SVR
