@@ -324,7 +324,8 @@ def get_ratings_second(emotion, linear=True):
     ratings = pd.read_csv('metadata_csv/participant_ratings.csv')
     target_emotion = ratings[~ratings.participant.isin([22])].sort_values(['participant', 'video'])[emotion].to_list()
     if not linear:
-        target_emotion = [0 if (float(e) < 5.0) else 1 for e in target_emotion]
+        # target_emotion = [0 if (float(e) < 5.0) else 1 for e in target_emotion]
+        target_emotion = [0 if (float(e) < 4.5) else 1 for e in target_emotion]
     return np.array(target_emotion)
 
 def get_ratings_group(emotion, target_col, target_val, groupby, exclude, binary=False):
