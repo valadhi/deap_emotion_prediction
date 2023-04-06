@@ -32,14 +32,17 @@ def write_to_csv(filename, to_add):
         writer_object.writerow(to_add)
         f_object.close()
 
+def get_hypersearch_size(params, cv_size=5):
+    return str(5 * len(ParameterGrid(xgboostRegressorParameters)))
+
 input = collate_feature_pickles(scale=True)
 y_pred_arr, y_test_arr, feats_imp = [[] for i in range(3)]
 kfold = model_selection.KFold(n_splits=10, shuffle=True, random_state=42)
 
-csv_filename = 'hyper_search_results.csv'
+# csv_filename = 'hyper_search_results.csv'
 csv_filename = 'hyper_search_classifier_results.csv'
 def run_hyper_search(model, params, model_descr, group_name='none', group_id='none'):
-    print("Doing search for " + str(model_descr) + " and group type " + str(group_name))
+    print("Doing search for " + str(model_descr) + " and group type " + str(group_name) + " with size" + get_hypersearch_size(params))
     for emotion in ['Valence', 'Arousal', 'Dominance', 'Liking']:
         # target = get_ratings_second(emotion, linear=True)
         target = get_ratings_second(emotion, linear=False)
@@ -54,6 +57,7 @@ def run_hyper_search(model, params, model_descr, group_name='none', group_id='no
         score = grid.best_score_
         # 'regressor_type', 'emotion_dimension', 'feature_group_criteria', 'group_id', 'hyperparams_json', 'score'
         results_row = [model_descr, emotion, group_name, group_id, json.dumps(best_params), str(score)]
+        print(results_row)
         write_to_csv(csv_filename, results_row)
 ########################################################################################################
 ############################### sklearn.ensemble.RandomForestRegressor #################################
