@@ -1,17 +1,4 @@
-numpy~=1.19.5
-pandas~=1.2.3
-xgboost~=1.6.1
-scikit-learn~=1.1.2
-matplotlib~=3.4.0
-scipy~=1.6.2
-pyedflib~=0.1.23
-biosemipy~=0.0.6
-cvxopt~=1.2.7
-torch~=1.10.1
-setuptools~=50.3.1
-pyqt5~=5.15.6
-numba~=0.55.1
-pyqtgraph~=0.12.3
-heartpy~=1.2.7
-ledapy~=1.2.1
-mlxtend~=0.20.0
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: linux-64
+
