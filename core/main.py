@@ -89,9 +89,16 @@ def reduce_features_worker(model, input, output, best_features=True, is_linear=T
               cv=5)
     sfs.fit(input, output)
     selector_metrics = sfs.get_metric_dict()
+
+    for k in selector_metrics.keys():
+        selector_metrics[k]['cv_scores'] = selector_metrics[k]['cv_scores'].tolist()
+    # print(selector_metrics)
+    # print(type(selector_metrics))
     best_score_key = sorted(selector_metrics.keys(),
                             key=lambda x: (selector_metrics[x]['avg_score']), reverse=True)[0]
-    return selector_metrics[best_score_key]['avg_score'], selector_metrics[best_score_key]['feature_idx']
+    return selector_metrics[best_score_key]['avg_score'], \
+        selector_metrics[best_score_key]['feature_idx'], \
+        selector_metrics
 
 
 # # # # # # # # # # # CLASSIFIERS # # # # # # # # # # # # #
