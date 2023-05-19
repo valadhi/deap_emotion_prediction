@@ -44,6 +44,7 @@ model_map = {"random forest regress": ensemble.RandomForestRegressor(),
              "xgbooost regress": xgboost.XGBRegressor(),
              # "gradien boost regress": ensemble.GradientBoostingRegressor()
              }
+model_official_name = {"xgbooost regress": "XGBoost", "random forest regress": "Random Forest"}
 def generate_image(idx, em ,mod):
 	row = model_params[(model_params['emotion_dimension'] == em) & (model_params['regressor_type'] == mod)]
 	row = row.iloc[0]
@@ -57,29 +58,35 @@ def generate_image(idx, em ,mod):
 
 	this_axis = ax[idx]
 	this_axis.bar(names, values)
-	this_axis.set_title(mod)
+	this_axis.set_title(model_official_name[mod])
 	# this_axis.set_xticklabels(this_axis.get_xticklabels(), rotation = 45)
 	plt.setp(this_axis.get_xticklabels(), rotation=45, horizontalalignment='right')
 
-em = 'Valence'
-fig, ax = plt.subplots(1, 2)
-fig.suptitle(em)
-generate_image(0, em=em, mod='random forest regress')
-generate_image(1, em=em, mod='xgbooost regress')
-plt.show()
-
-em = 'Arousal'
-fig, ax = plt.subplots(1, 2)
-fig.suptitle(em)
-generate_image(0, em=em, mod='random forest regress')
-generate_image(1, em=em, mod='xgbooost regress')
-plt.show()
+# em = 'Valence'
+# fig, ax = plt.subplots(1, 2, figsize=(12, 6))
+# fig.canvas.manager.set_window_title(em)
+# fig.suptitle(em)
+# generate_image(0, em=em, mod='random forest regress')
+# generate_image(1, em=em, mod='xgbooost regress')
+# plt.tight_layout()
+# plt.show()
+#
+# em = 'Arousal'
+# fig, ax = plt.subplots(1, 2, figsize=(12, 6))
+# fig.canvas.manager.set_window_title(em)
+# fig.suptitle(em)
+# generate_image(0, em=em, mod='random forest regress')
+# generate_image(1, em=em, mod='xgbooost regress')
+# plt.tight_layout()
+# plt.show()
 
 em = 'Dominance'
-fig, ax = plt.subplots(1, 2)
+fig, ax = plt.subplots(1, 2, figsize=(12, 6))
+fig.canvas.manager.set_window_title(em)
 fig.suptitle(em)
 generate_image(0, em=em, mod='random forest regress')
 generate_image(1, em=em, mod='xgbooost regress')
+plt.tight_layout()
 plt.show()
 
 # for idx, row in model_params.iterrows():
