@@ -1,0 +1,18 @@
+regressor_type,emotion_dimension,feature_group_criteria,group_id,hyperparams_json,score
+random_forest,Liking,none,none,"{""max_depth"": 6, ""max_features"": ""log2"", ""max_leaf_nodes"": 3, ""n_estimators"": 25}",0.6516129032258065
+random_forest,Valence,none,none,"{""max_depth"": 3, ""max_features"": ""sqrt"", ""max_leaf_nodes"": 3, ""n_estimators"": 25}",0.6016129032258065
+random_forest,Arousal,none,none,"{""max_depth"": 6, ""max_features"": ""log2"", ""max_leaf_nodes"": 3, ""n_estimators"": 25}",0.5975806451612904
+random_forest,Dominance,none,none,"{""max_depth"": 3, ""max_features"": ""log2"", ""max_leaf_nodes"": 3, ""n_estimators"": 150}",0.4959677419354839
+random_forest,Liking,none,none,"{""max_depth"": 9, ""max_features"": ""sqrt"", ""max_leaf_nodes"": 3, ""n_estimators"": 25}",0.6306451612903226
+xgboost_regressor,Valence,none,none,"{""colsample_bytree"": 0.5, ""gamma"": 7, ""max_depth"": 3, ""min_child_weight"": 0, ""reg_alpha"": 40, ""reg_lambda"": 0}",0.6338709677419354
+xgboost_regressor,Arousal,none,none,"{""colsample_bytree"": 0.5, ""gamma"": 7, ""max_depth"": 3, ""min_child_weight"": 0, ""reg_alpha"": 40, ""reg_lambda"": 0}",0.6362903225806452
+xgboost_regressor,Dominance,none,none,"{""colsample_bytree"": 0.5, ""gamma"": 7, ""max_depth"": 3, ""min_child_weight"": 0, ""reg_alpha"": 40, ""reg_lambda"": 0}",0.6677419354838708
+xgboost_regressor,Liking,none,none,"{""colsample_bytree"": 0.5, ""gamma"": 7, ""max_depth"": 3, ""min_child_weight"": 0, ""reg_alpha"": 40, ""reg_lambda"": 0}",0.6967741935483872
+gradientboost_regressor,Valence,none,none,"{""learning_rate"": 0.01, ""max_depth"": 1, ""n_estimators"": 5}",0.6338709677419354
+gradientboost_regressor,Arousal,none,none,"{""learning_rate"": 100, ""max_depth"": 1, ""n_estimators"": 5}",0.6491935483870968
+gradientboost_regressor,Dominance,none,none,"{""learning_rate"": 0.01, ""max_depth"": 1, ""n_estimators"": 5}",0.6677419354838708
+gradientboost_regressor,Liking,none,none,"{""learning_rate"": 0.01, ""max_depth"": 1, ""n_estimators"": 5}",0.6967741935483872
+svr_regressor,Valence,none,none,"{""C"": 0.1, ""gamma"": 0.0001, ""kernel"": ""linear""}",0.6338709677419354
+svr_regressor,Arousal,none,none,"{""C"": 0.1, ""gamma"": 0.0001, ""kernel"": ""linear""}",0.6362903225806452
+svr_regressor,Dominance,none,none,"{""C"": 0.1, ""gamma"": 0.0001, ""kernel"": ""poly""}",0.6677419354838708
+svr_regressor,Liking,none,none,"{""C"": 0.1, ""gamma"": 0.0001, ""kernel"": ""poly""}",0.6967741935483872

@@ -1,0 +1,17 @@
+regressor_type,emotion_dimension,feature_group_criteria,group_id,hyperparams_json,score
+random forest regress,Valence,none,none,"{""max_depth"": null, ""max_features"": ""sqrt"", ""min_samples_leaf"": 8, ""min_samples_split"": 5, ""n_estimators"": 200}",-1.8662651159106702
+random forest regress,Arousal,none,none,"{""max_depth"": 10, ""max_features"": ""sqrt"", ""min_samples_leaf"": 1, ""min_samples_split"": 10, ""n_estimators"": 1600}",-1.7331640286173777
+random forest regress,Dominance,none,none,"{""max_depth"": 90, ""max_features"": ""sqrt"", ""min_samples_leaf"": 8, ""min_samples_split"": 2, ""n_estimators"": 200}",-1.7854539130998877
+random forest regress,Liking,none,none,"{""max_depth"": 50, ""max_features"": ""sqrt"", ""min_samples_leaf"": 8, ""min_samples_split"": 2, ""n_estimators"": 200}",-1.9747083470645457
+xgbooost regress,Valence,none,none,"{""colsample_bytree"": 0.5, ""gamma"": 7, ""max_depth"": 5, ""min_child_weight"": 6, ""reg_alpha"": 140, ""reg_lambda"": 0}",-1.8042242128156847
+xgbooost regress,Arousal,none,none,"{""colsample_bytree"": 0.5, ""gamma"": 7, ""max_depth"": 3, ""min_child_weight"": 6, ""reg_alpha"": 140, ""reg_lambda"": 0}",-1.7183522197969499
+xgbooost regress,Dominance,none,none,"{""colsample_bytree"": 0.5, ""gamma"": 7, ""max_depth"": 3, ""min_child_weight"": 8, ""reg_alpha"": 90, ""reg_lambda"": 0}",-1.827799079079782
+xgbooost regress,Liking,none,none,"{""colsample_bytree"": 0.5, ""gamma"": 7, ""max_depth"": 5, ""min_child_weight"": 10, ""reg_alpha"": 140, ""reg_lambda"": 0}",-1.9426573906098639
+gradien boost regress,Valence,none,none,"{""max_depth"": 5, ""max_features"": 7, ""min_samples_leaf"": 30, ""min_samples_split"": 1100, ""n_estimators"": 10, ""subsample"": 0.7}",-1.7874970730838755
+gradien boost regress,Arousal,none,none,"{""max_depth"": 5, ""max_features"": 19, ""min_samples_leaf"": 30, ""min_samples_split"": 650, ""n_estimators"": 10, ""subsample"": 0.6}",-1.6891848101937632
+gradien boost regress,Dominance,none,none,"{""max_depth"": 5, ""max_features"": 7, ""min_samples_leaf"": 65, ""min_samples_split"": 650, ""n_estimators"": 10, ""subsample"": 0.9}",-1.7301522712444097
+gradien boost regress,Liking,none,none,"{""max_depth"": 5, ""max_features"": 19, ""min_samples_leaf"": 30, ""min_samples_split"": 1100, ""n_estimators"": 10, ""subsample"": 0.7}",-1.90285177533135
+svm regress,Valence,none,none,"{""C"": 1, ""gamma"": 0.0001, ""kernel"": ""poly""}",-1.7800483913946898
+svm regress,Arousal,none,none,"{""C"": 1, ""gamma"": 0.0001, ""kernel"": ""poly""}",-1.7076129339506825
+svm regress,Dominance,none,none,"{""C"": 1, ""gamma"": 0.0001, ""kernel"": ""rbf""}",-1.7528925394762176
+svm regress,Liking,none,none,"{""C"": 1, ""gamma"": 0.0001, ""kernel"": ""poly""}",-1.8182177622910345

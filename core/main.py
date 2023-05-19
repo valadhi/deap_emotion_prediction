@@ -303,7 +303,7 @@ def read_video_info(video_id):
     row = video_info[video_info['Experiment_id'] == video_id].iloc[0]
     return row['Artist'] + " - " + row['Title']
 
-def collate_feature_pickles(scale=True):
+def collate_feature_pickles(scale=True, return_names=False):
     from sklearn import preprocessing
     hr_path = "hr_features.pkl"
     eda_path = "eda_features.pkl"
@@ -319,13 +319,17 @@ def collate_feature_pickles(scale=True):
 
     clean_frame = full_feature_data.sort_values(['participant', 'video'])
     feats = clean_frame.drop(columns=['participant', 'video'])
+    feat_names = feats.columns
 
     if(scale):
         scaler = preprocessing.StandardScaler()
         feats[feats.columns] = scaler.fit_transform(feats[feats.columns])
         feats = feats.values.tolist()
 
-    return feats
+    if return_names:
+        return feats, feat_names
+    else:
+        return feats
 
 def get_ratings_second(emotion, linear=True):
     ratings = pd.read_csv('metadata_csv/participant_ratings.csv')
